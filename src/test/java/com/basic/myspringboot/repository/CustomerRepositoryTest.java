@@ -24,7 +24,7 @@ class CustomerRepositoryTest {
     @Test
     @Rollback(value = false)
     void testDeleteCustomer() {
-        Customer customer = customerRepository.findById(1L)  //Optional<Customer>
+        Customer customer = customerRepository.findById(10L)  //Optional<Customer>
                 .orElseThrow(() -> new RuntimeException("Customer Not Found"));
         customerRepository.delete(customer);
     }
