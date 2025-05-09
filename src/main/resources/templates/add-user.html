@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<body>
+<h2>User 등록</h2>
+<form action="#" th:action="@{/adduser}" th:object="${userForm}" method="post">
+    <label for="name">Name</label>
+    <input type="text" th:field="*{name}" id="name"> <!--th:field 태그는 id, name, value 3가지 속성을 만들어준다. -->
+    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    <br/>
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email">
+    <!--    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>-->
+    <div th:if="${#fields.hasErrors('email')}">
+        <ul>
+            <li th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+        </ul>
+    </div>
+    <br/>
+    <input type="submit" value="Add User">
+</form>
+</body>
+</html>
