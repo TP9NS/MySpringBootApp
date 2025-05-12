@@ -10,16 +10,17 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter @Setter
+//Non-Owner(종속) 양방향관계
 public class Student {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
     private Long id;
-    
+
     @Column(nullable = false)
     private String name;
-    
+
     @Column(unique = true, nullable = false)
     private String studentNumber;
 
