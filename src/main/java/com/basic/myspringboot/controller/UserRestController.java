@@ -6,6 +6,7 @@ import com.basic.myspringboot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,11 +32,13 @@ public class UserRestController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         Optional<User> optionalUser = userRepository.findById(id);
         //public <U> Optional<U> map(Function<? super T,? extends U> mapper)
@@ -56,19 +59,15 @@ public class UserRestController {
         User existUser = getExistUser(optionalUser);
         return existUser;
     }
+
     @PatchMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetail){
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetail) {
         User existUser = getExistUser(userRepository.findById(id));
+        //setter method 호출
         existUser.setName(userDetail.getName());
         User updatedUser = userRepository.save(existUser);
-
         return ResponseEntity.ok(updatedUser);
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id){
-        User user = getExistUser(userRepository.findById(id));
-        userRepository.delete((user));
-        return ResponseEntity.ok("User Deleted");
+//        return ResponseEntity.ok(userRepository.save(existUser));
     }
 
     private User getExistUser(Optional<User> optionalUser) {
@@ -76,4 +75,17 @@ public class UserRestController {
                 .orElseThrow(() -> new BusinessException("User Not Found", HttpStatus.NOT_FOUND));
         return existUser;
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        User user = getExistUser(userRepository.findById(id));
+        userRepository.delete(user);
+        return ResponseEntity.ok("User가 삭제 되었습니다!"); //status code 200
+        //return ResponseEntity.noContent().build();  //status code 204
+    }
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "Welcome this endpoint is not secure";
+    }
+
 }
