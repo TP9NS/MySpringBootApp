@@ -12,7 +12,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
 @Component
-@Order(1)
+@Order(2)
 @Slf4j
 public class DatabaseRunner implements ApplicationRunner {
     @Autowired
